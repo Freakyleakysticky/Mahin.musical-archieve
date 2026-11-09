@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080808">
+
+  <title>mahin.gay</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://i.pinimg.com">
+  <link rel="preconnect" href="https://open.spotify.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       SCROLL PROGRESS
+       Thin bar at the very top, fills as you scroll the page
+       ========================================================= -->
+
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+
+  <!-- =========================================================
+       ENTRY GATE
+       GTA-style: big vertical artist portraits + a quote.
+       Text is controlled by content.js (SITE_CONTENT.gate).
+       ========================================================= -->
+
+  <div class="boot-screen" id="gate">
+
+    <div class="gate-portraits" id="gatePortraits" aria-hidden="true"></div>
+    <div class="gate-scrim" aria-hidden="true"></div>
+
+    <div class="gate-content">
+
+      <blockquote class="gate-quote" id="gateQuote"></blockquote>
+      <span class="gate-quote-author" id="gateQuoteAuthor"></span>
+
+      <div class="gate-boot" id="gateBoot" aria-hidden="true"></div>
+
+      <button type="button" class="boot-enter" id="gateEnter" disabled>
+        <span id="gateEnterLabel">ENTER</span>
+      </button>
+
+      <p class="boot-hint" id="gateSub"></p>
+
+    </div>
+
+  </div>
+
+  <div class="gate-flash" id="gateFlash" aria-hidden="true"></div>
+
+
+  <!-- =========================================================
+       BACKGROUND
+       ========================================================= -->
+
+  <div class="bgwrap" id="bgwrap"></div>
+
+
+  <!-- =========================================================
+       FLOATING MUSIC PLAYER
+       Full-width Spotify-style bar on desktop; a slim
+       mini-player on mobile that opens the full "now playing"
+       overlay below when tapped.
+       ========================================================= -->
+
+  <div class="sticky-player" id="floatingArtist" aria-label="Currently playing music">
+
+    <div class="sticky-player-progress" aria-hidden="true"><div class="sticky-player-progress-fill" id="floatingProgressFill"></div></div>
+
+    <div class="sticky-player-bar" id="floatingBar">
+
+      <div class="sticky-player-left">
+
+        <div class="sticky-player-art" id="floatingArtSpin">
+          <span class="vinyl-ring" aria-hidden="true"></span>
+          <img id="floatingArtistImage" src="" alt="">
+        </div>
+
+        <div class="sticky-player-info">
+          <span class="sticky-player-name" id="floatingArtistName" aria-live="polite"></span>
+          <span class="sticky-player-song" id="floatingArtistSong" aria-live="polite"></span>
+        </div>
+
+        <div class="sticky-player-viz" id="floatingViz" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+      </div>
+
+      <div class="sticky-player-center">
+
+        <div class="sticky-player-transport">
+          <button class="player-control" id="floatingPrevious" type="button" aria-label="Previous artist" title="Previous"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="player-control player-control-play" id="floatingPlayPause" type="button" aria-label="Play" title="Play / Pause"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5.6v12.8a1 1 0 0 0 1.52.85l10.2-6.4a1 1 0 0 0 0-1.7L9.52 4.75A1 1 0 0 0 8 5.6z"/></svg></button>
+          <button class="player-control" id="floatingNext" type="button" aria-label="Next artist" title="Next"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+
+        <div class="sticky-player-seek">
+          <span class="sticky-player-time" id="floatingTimeCurrent">0:00</span>
+          <div class="sticky-player-seek-track" id="floatingSeekTrack" role="slider" tabindex="0" aria-label="Song progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="sticky-player-seek-fill" id="floatingSeekFill"></div>
+            <div class="sticky-player-seek-thumb" id="floatingSeekThumb"></div>
+          </div>
+          <span class="sticky-player-time sticky-player-time-left" id="floatingTimeDuration" title="Song length">0:00</span>
+        </div>
+
+      </div>
+
+      <div class="sticky-player-right">
+
+        <span class="sticky-player-next" id="floatingRotation" title="Time until the next artist">next 0:25</span>
+
+        <span class="sticky-player-status" id="floatingStatus" aria-live="polite">[PAUSED]</span>
+
+        <div class="player-volume" title="Volume">
+          <span class="player-volume-icon" id="floatingVolumeIcon">♪</span>
+          <input type="range" id="floatingVolume" min="0" max="100" value="70" aria-label="Volume">
+        </div>
+
+        <button class="player-chip" id="floatingExpandBtn" type="button" aria-label="Expand now playing" title="Expand"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="player-chip player-minimize" id="floatingMinimize" type="button" aria-label="Minimize player" title="Minimize"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+      </div>
+
+    </div>
+
+    <div class="sticky-player-youtube">
+      <div id="floatingArtistPlayer"></div>
+    </div>
+
+  </div>
+
+  <button type="button" id="floatingRestore" class="player-restore" aria-label="Show music player" hidden>♪ music</button>
+
+
+  <!-- =========================================================
+       NOW PLAYING — full expanded overlay
+       ========================================================= -->
+
+  <div class="now-playing-overlay" id="nowPlayingOverlay" aria-hidden="true">
+
+    <div class="now-playing-card">
+
+      <button class="now-playing-close" id="nowPlayingClose" type="button" aria-label="Close now playing"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+      <span class="now-playing-kicker" id="nowPlayingStatus">[PAUSED]</span>
+
+      <div class="now-playing-art" id="nowPlayingArtWrap">
+        <span class="vinyl-ring vinyl-ring-big" aria-hidden="true"></span>
+        <img id="nowPlayingImage" src="" alt="">
+      </div>
+
+      <div class="now-playing-text">
+        <span class="now-playing-name" id="nowPlayingName"></span>
+        <span class="now-playing-song" id="nowPlayingSong"></span>
+      </div>
+
+      <span class="now-playing-next" id="nowPlayingRotation" title="Time until the next artist">next 0:25</span>
+
+      <div class="now-playing-viz" id="nowPlayingViz" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="now-playing-seek">
+        <div class="now-playing-seek-track" id="nowPlayingSeekTrack" role="slider" tabindex="0" aria-label="Song progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="now-playing-seek-fill" id="nowPlayingSeekFill"></div>
+          <div class="now-playing-seek-thumb" id="nowPlayingSeekThumb"></div>
+        </div>
+        <div class="now-playing-times">
+          <span id="nowPlayingTimeCurrent">0:00</span>
+          <span id="nowPlayingTimeDuration" title="Song length">0:00</span>
+        </div>
+      </div>
+
+      <div class="now-playing-transport">
+        <button class="np-control" id="nowPlayingPrevious" type="button" aria-label="Previous artist"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="np-control np-control-play" id="nowPlayingPlayPause" type="button" aria-label="Play"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5.6v12.8a1 1 0 0 0 1.52.85l10.2-6.4a1 1 0 0 0 0-1.7L9.52 4.75A1 1 0 0 0 8 5.6z"/></svg></button>
+        <button class="np-control" id="nowPlayingNext" type="button" aria-label="Next artist"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+
+      <div class="player-volume now-playing-volume" title="Volume">
+        <span class="player-volume-icon" id="nowPlayingVolumeIcon">♪</span>
+        <input type="range" id="nowPlayingVolume" min="0" max="100" value="70" aria-label="Volume">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       SEARCH OVERLAY
+       ========================================================= -->
+
+  <button type="button" id="searchTrigger" class="search-trigger" aria-label="Search artists" title="Search">⌕</button>
+
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+    <div class="search-panel">
+
+      <div class="search-input-row">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="search artists..." autocomplete="off">
+        <button type="button" id="searchClose" class="search-close" aria-label="Close search">×</button>
+      </div>
+
+      <ul class="search-results" id="searchResults"></ul>
+
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       BACK TO TOP + SURPRISE ME
+       ========================================================= -->
+
+  <button type="button" id="surpriseBtn" class="surprise-btn" aria-label="Jump to a random artist" title="Surprise me">🎲</button>
+
+  <button type="button" id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+
+  <!-- =========================================================
+       HERO
+       ========================================================= -->
+
+  <header class="hero">
+    <span class="kicker" id="heroKicker"></span>
+    <h1 id="heroTitle"></h1>
+    <p id="heroSubtitle"></p>
+
+    <div class="stats-strip" id="statsStrip" aria-hidden="true"></div>
+  </header>
+
+
+  <!-- =========================================================
+       MARQUEE
+       ========================================================= -->
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+
+
+  <!-- =========================================================
+       WIDGETS (built in script.js)
+       ========================================================= -->
+
+  <section class="widgets" id="widgets" aria-label="Widgets"></section>
+
+
+  <!-- =========================================================
+       MOBILE NAV TRIGGER
+       ========================================================= -->
+
+  <button type="button" id="navTrigger" class="nav-trigger" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="nav-backdrop" id="navBackdrop"></div>
+
+
+  <!-- =========================================================
+       NAVIGATION
+       ========================================================= -->
+
+  <nav id="nav"></nav>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+       ========================================================= -->
+
+  <main id="main"></main>
+
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+
+  <footer>
+
+    <span id="footerMain">made for neocities</span>
+
+    <span class="visitor-counter" title="visitors this... let's say ever">
+      <span class="visitor-counter-label">visitors</span>
+      <span class="visitor-counter-digits" id="visitorCount">000000</span>
+    </span>
+
+    <span class="scrawl" id="footerScrawl">still adding more all the time :)</span>
+
+  </footer>
+
+
+  <!-- =========================================================
+       YOUTUBE API (loaded async by the browser automatically)
+       ========================================================= -->
+
+  <script src="https://www.youtube.com/iframe_api" async></script>
+
+
+  <!-- =========================================================
+       WEBSITE CONTENT + MAIN JS — deferred so the page paints
+       before either has to run
+       ========================================================= -->
+
+  <script src="content.js" defer></script>
+  <script src="script.js" defer></script>
+
+</body>
+</html>
